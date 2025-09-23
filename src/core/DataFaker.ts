@@ -13,6 +13,9 @@ import {
   LocaleType,
   ModelSchema,
 } from '@/types/faker';
+import { DECORATORNAME } from '@/constants/DecoratorConstants';
+import { DecoratedClass } from '@/types';
+import { ClassDecoratorStateManager } from '@/common/ClassDecoratorStateManager';
 
 /**
  * FakerApi类
@@ -231,6 +234,24 @@ export function cloneModel(newModelName: string | symbol, dataModel: DModel) {
   const modelSchema = dataModel.getModelSchema();
   let newModelSchema = ObjectUtils.deepClone(modelSchema);
   return new DModel(newModelName, newModelSchema);
+}
+
+/**
+ * 使用模型
+ */
+export function useModel(target: DecoratedClass | string | symbol) {
+  let modelName;
+  if (typeof target === 'function') {
+    // 获取装饰器配置
+    const decoratorInfo = ClassDecoratorStateManager.getInstance().getDecoratorInfo(
+      target.prototype,
+      DECORATORNAME.DATAMODEL,
+    );
+    modelName = decoratorInfo?.configs[0];
+  } else {
+    modelName = target;
+  }
+  return modelName ? ModelManager.getDataModel(modelName) : null;
 }
 /**
  * 伪造数据

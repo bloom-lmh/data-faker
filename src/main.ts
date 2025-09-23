@@ -1,5 +1,6 @@
 import { DEEP, COUNT } from './constants/DataFakerConstants';
-import { defineModel, FakeData } from './core/DataFaker';
+import { DataModel, DataField } from './core';
+import { defineModel, FakeData, useModel } from './core/DataFaker';
 
 const companyModel = defineModel('company', {
   name: 'company.name',
@@ -61,3 +62,22 @@ const userDatas = FakeData(userModel, {
   },
 });
 console.log(userDatas);
+@DataModel('person')
+class PersonModel {
+  @DataField('person.fullName')
+  declare firstName: string;
+}
+
+@DataModel('student')
+class UserModel extends PersonModel {
+  @DataField('number.int')
+  declare id: number;
+
+  @DataField(() => {
+    return 'male';
+  })
+  declare gender: string;
+}
+console.log(FakeData('student'));
+
+const studentModel = useModel(UserModel);
