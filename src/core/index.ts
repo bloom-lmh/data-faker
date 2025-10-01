@@ -5,7 +5,7 @@ import { DataModelDecoratorFactory } from './DataModelDecoratorFactory';
 /**
  * 数据字段装饰器
  */
-export function DataField<P extends FakerMethodPath>(
+export function DataField<P extends string>(
   options: FakerMethodPath | [P, FakerMethodParamsType<P>] | CustomGenerator | RefModel,
 ) {
   return new DataFieldDecoratorFactory().createDecorator(options);

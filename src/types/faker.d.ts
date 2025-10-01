@@ -33,8 +33,18 @@ type FakerMethod<P extends string> = P extends `${infer M extends FakerModule}.$
 /**
  * faker方法参数类型
  */
-type FakerMethodParamsType<P extends string> = FakerMethod<P> extends (args: infer A) => any ? A : never;
-
+/* type FakerMethodParamsType<P extends string> = FakerMethod<P> extends (args: infer A) => any ? A :never; */
+type FakerMethodParamsType<P extends FakerMethodPath> = P extends `${infer M}.${infer F}`
+  ? M extends FakerModule
+    ? F extends keyof Faker[M]
+      ? Faker[M][F] extends (...args: infer A) => any
+        ? A extends [any?]
+          ? A[0]
+          : never
+        : never
+      : never
+    : never
+  : never;
 /**
  * 自定义数据生成器
  */
@@ -51,11 +61,11 @@ type RefModelOptions = {
   /**
    * 生成数量
    */
-  [COUNT]?: number;
+  count?: number;
   /**
    * 引用自身时的递归深度
    */
-  [DEEP]?: number;
+  deep?: number;
 };
 /**
  * 引用模型配置
@@ -65,7 +75,7 @@ type RefModel = RefModelOptions | DModel;
 /**
  * 数据字段类型
  */
-type DataFieldType<P extends FakerMethodPath = string> =
+type DataFieldType<P extends FakerMethodPath = FakerMethodPath> =
   | CustomGenerator
   | RefModel
   | FakerMethodPath
@@ -105,10 +115,11 @@ export type AllFakers = keyof typeof allFakers;
  * 语言环境类型
  */
 type LocaleType = AllFakers | Array<LocaleDefinition | AllFakers> | Faker;
+
 /**
  * Fake数据规则
  */
-type DataFakeRule = {
+type RefModelRule = {
   /**
    * 生成数量
    */
@@ -120,7 +131,7 @@ type DataFakeRule = {
   /**
    * 结构递归
    */
-  [key: string | symbol]: number | DataFakeRule | [number, number];
+  [key: string | symbol]: number | RefModelRule | [number, number];
 };
 
 /**
@@ -128,10 +139,13 @@ type DataFakeRule = {
  */
 type DataFakeOptions = {
   /**
+   * 生成数量
+   */
+  count?: number;
+  /**
    * 对于引用类型的规则
    */
-  rules?: DataFakeRule;
-
+  refRules?: RefModelRule;
   /**
    * 回调函数
    * @description 对生成的数据进行后处理

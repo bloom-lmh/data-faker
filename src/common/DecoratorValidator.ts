@@ -4,11 +4,6 @@
  */
 export abstract class DecoratorValidator {
   /**
-   * 装饰器信息
-   */
-  //protected decoratorInfo: DecoratorInfo;
-
-  /**
    * 检查装饰器依赖的装饰器是否存在
    */
   abstract hasDependentedDecorator(...args: any[]): boolean;

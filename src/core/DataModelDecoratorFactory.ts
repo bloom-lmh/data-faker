@@ -16,7 +16,7 @@ export class DataModelDecoratorFactory {
   /**
    * 装饰器校验器
    */
-  protected decoratorValidator: ClassDecoratorValidator = new ClassDecoratorValidator();
+  protected decoratorValidator: ClassDecoratorValidator = ClassDecoratorValidator.getInstance();
 
   /**
    * 初始化装饰器信息
@@ -35,21 +35,6 @@ export class DataModelDecoratorFactory {
       throw new Error('装饰器冲突');
     }
   }
-  /**
-   *
-   */
-  protected preCheckConfig(config: string | symbol): void {}
-  /**
-   * 处理配置
-   * @description 将模型注入模型管理器
-   */
-  protected preHandleConfig(target: DecoratedClass, modelName: string | symbol) {}
-
-  /**
-   * 获取模型并注入工厂
-   * @param target 被装饰的类
-   * @param modelName 模型名
-   */
   /**
    * 获取模型并注入工厂
    * @param target 被装饰的类
@@ -85,8 +70,6 @@ export class DataModelDecoratorFactory {
     return (target: DecoratedClass) => {
       this.initDecoratorInfo();
       this.validateDecorator(target);
-      this.preHandleConfig(target, modelName);
-      this.preCheckConfig(modelName);
       this.setupState(target, modelName);
     };
   }

@@ -7,11 +7,11 @@ import { ModelManager } from './ModelManager';
 import {
   CustomGenerator,
   DataFakeOptions,
-  DataFakeRule,
   DataFieldType,
   FakerModule,
   LocaleType,
   ModelSchema,
+  RefModelRule,
 } from '@/types/faker';
 import { DECORATORNAME } from '@/constants/DecoratorConstants';
 import { DecoratedClass } from '@/types';
@@ -25,6 +25,7 @@ import { ClassDecoratorStateManager } from '@/common/ClassDecoratorStateManager'
 export class DataFaker {
   /**
    * 当前语言
+   * @default 英文环境
    */
   private static locale: Faker = faker;
   /**
@@ -73,22 +74,22 @@ export class DataFaker {
   /**
    * 使用的模型
    */
-  static parseModel(dataModel: DModel | string | symbol, rules?: DataFakeRule) {
+  static parseModel(dataModel: DModel | string | symbol, count: number = 1, rules: RefModelRule = {}) {
     let model = dataModel instanceof DModel ? dataModel : ModelManager.getDataModel(dataModel);
     if (!model) {
       return null;
     }
     let modelSchema = model.getModelSchema();
     let modelName = model.getModelName();
-    rules = rules || {};
-    rules[COUNT] = rules[COUNT] === undefined || rules[COUNT] === null ? 1 : rules[COUNT];
+    /*   rules = rules || {};
+    rules[COUNT] = rules[COUNT] === undefined || rules[COUNT] === null ? 1 : rules[COUNT]; */
     const path = new Set<string | symbol>().add(modelName);
-    if (rules[COUNT] <= 0) {
+    if (count <= 0) {
       return null;
-    } else if (rules[COUNT] === 1) {
+    } else if (count === 1) {
       return this.parseScheme(modelSchema, rules, path);
     } else {
-      return Array.from({ length: rules[COUNT] }).map(() => this.parseScheme(modelSchema, rules, path));
+      return Array.from({ length: count }).map(() => this.parseScheme(modelSchema, rules, path));
     }
   }
 
@@ -97,7 +98,7 @@ export class DataFaker {
    */
   private static parseScheme(
     modelSchema: ModelSchema,
-    rules: DataFakeRule,
+    rules: RefModelRule,
     path: Set<string | symbol> = new Set(),
     currentDepth: number = 0,
   ): Record<string | symbol, any> | null {
@@ -106,7 +107,7 @@ export class DataFaker {
       return null;
     }
     // 检查深度限制
-    const maxDepth = rules[DEEP] ?? Infinity;
+    const maxDepth = (rules[DEEP] as number) ?? Infinity;
     if (currentDepth > maxDepth) return null;
     // 函数队列
     let fnShemaList: Array<Record<string | symbol, CustomGenerator>> = [];
@@ -159,11 +160,11 @@ export class DataFaker {
         if (schema instanceof DModel) {
           refModel = schema;
         } else {
+          // 字符串形式则从模型管理器获取
           refModel = schema.refModel instanceof DModel ? schema.refModel : ModelManager.getDataModel(schema.refModel);
-          // 合并默认值
-          rls[COUNT] = rls[COUNT] ?? schema[COUNT] ?? 1;
-          // 后续配置优先级高于前面
-          rls[DEEP] = rls[DEEP] ?? schema[DEEP] ?? rules[DEEP];
+          // 合并默认值,后续配置优先级高于前面
+          rls[COUNT] = rls[COUNT] ?? schema.count ?? 1;
+          rls[DEEP] = rls[DEEP] ?? schema.deep ?? rules[DEEP];
         }
 
         if (!refModel) {
@@ -181,12 +182,12 @@ export class DataFaker {
 
         // 克隆path以避免污染
         const newPath = new Set(path).add(modelName);
-        if (rls[COUNT] <= 0) {
+        if ((rls[COUNT] as number) <= 0) {
           result[key] = null;
         } else if (rls[COUNT] === 1) {
           result[key] = this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0);
         } else {
-          result[key] = Array.from({ length: rls[COUNT] }, () =>
+          result[key] = Array.from({ length: rls[COUNT] as number }, () =>
             this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0),
           );
         }
@@ -258,9 +259,9 @@ export function useModel(target: DecoratedClass | string | symbol) {
  */
 export function FakeData(dataModel: DModel | string | symbol, options?: DataFakeOptions) {
   // 获取生成数据规则和回调
-  const { rules, callbacks, locale } = options || {};
+  const { count, refRules, callbacks, locale } = options || {};
   DataFaker.setLocale(locale);
-  let data = DataFaker.parseModel(dataModel, rules);
+  let data = DataFaker.parseModel(dataModel, count, refRules);
   if (typeof callbacks === 'function') {
     return callbacks(data);
   }

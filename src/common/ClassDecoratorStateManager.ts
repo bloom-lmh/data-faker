@@ -1,6 +1,6 @@
 import { METADATAKEY } from '@/constants/MetaDataConstants';
 import { DecoratorInfo } from '@/core/DecoratorInfo';
-import { DecoratedClass, DecoratedClassOrProto } from '@/types';
+import { DecoratedClass } from '@/types';
 
 /**
  * 类状态管理器
