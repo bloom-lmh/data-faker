@@ -41,7 +41,6 @@ export class DecoratorInfo implements DecorationInfo {
     if (!decoratorInfo) {
       return this;
     }
-
     const { name = 'unknown', configs = [], conflictList = [], dependsOn = [] } = decoratorInfo;
     this.name = name;
     this.configs = configs;

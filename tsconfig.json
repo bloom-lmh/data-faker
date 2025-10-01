@@ -3,7 +3,7 @@
     // 基本路径
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
     },
     "esModuleInterop": true,
     "target": "ES2022",
