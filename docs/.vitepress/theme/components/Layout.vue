@@ -5,9 +5,7 @@ const { Layout } = DefaultTheme;
 
 <template>
   <!-- 此处将渲染 markdown 内容 -->
-  <Layout>
-    <template #home-hero-image> aa </template>
-  </Layout>
+  <Layout> </Layout>
 </template>
 
 <style lang="scss" scoped></style>

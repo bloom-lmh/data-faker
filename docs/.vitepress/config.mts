@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    /* logo: './logo.png', */
     // https://vitepress.dev/reference/default-theme-config
     nav: [{ text: '指南', link: '/docs/什么是DataFaker' }],
     sidebar: [
@@ -53,6 +54,3 @@ export default defineConfig({
     socialLinks: [{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }],
   },
 });
-function resolve(__dirname: string, arg1: string): string {
-  throw new Error('Function not implemented.');
-}

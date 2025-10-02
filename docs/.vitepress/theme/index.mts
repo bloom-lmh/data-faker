@@ -7,6 +7,5 @@ export default {
   ...DefaultTheme,
   NotFound: () => '404', // <- this is a Vue 3 functional component
   Layout: Layout,
-
   enhanceApp(ctx: EnhanceAppContext) {},
 };
