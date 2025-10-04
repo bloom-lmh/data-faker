@@ -1,9 +1,9 @@
 import { ClassDecoratorValidator } from '@/common/ClassDecoratorValidator';
 import { DECORATORNAME } from '@/constants/DecoratorConstants';
-import { defineModel } from './DataFaker';
 import { DecoratorInfo } from './DecoratorInfo';
 import { ClassDecorator, DecoratedClass } from '@/types';
 import { DataFieldType } from '@/types/faker';
+import { defineModel } from './ModelManager';
 
 /**
  * 数据模型装饰器工厂类
@@ -73,4 +73,11 @@ export class DataModelDecoratorFactory {
       this.setupState(target, modelName);
     };
   }
+}
+
+/**
+ * 数据模型装饰器
+ */
+export function DataModel(modelName: string | symbol) {
+  return new DataModelDecoratorFactory().createDecorator(modelName);
 }
