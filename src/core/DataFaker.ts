@@ -43,7 +43,11 @@ export class DataFaker {
   /**
    * 伪造数据
    */
-  static fake(dataModel: DModel | string | symbol, options?: DataFakeOptions) {
+  static fake(dataModel: DModel | string | symbol, options?: DataFakeOptions | number) {
+    // 生成数量
+    if (typeof options === 'number') {
+      options = { count: options };
+    }
     // 获取生成数据规则和回调
     const { count, refRules, callbacks, locale } = options || {};
     // 与全局语言环境合并
@@ -68,6 +72,6 @@ export class DataFaker {
 /**
  * 伪造数据
  */
-export function fakeData(dataModel: DModel | string | symbol, options?: DataFakeOptions) {
+export function fakeData(dataModel: DModel | string | symbol, options?: DataFakeOptions | number) {
   return DataFaker.fake(dataModel, options);
 }
