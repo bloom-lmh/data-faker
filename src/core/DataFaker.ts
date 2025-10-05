@@ -77,7 +77,6 @@ export class DataFaker {
     let { count, refRules, hooks, locale } = options || {};
     // 合并hooks
     hooks = this.unionHooks(hooks);
-    console.log(hooks);
 
     // 与全局语言环境合并
     let lc = LocaleParser.parseLocale(locale) || this.locale;

@@ -1,5 +1,5 @@
 import { DataFaker } from '@/core/DataFaker';
-import { faker, defineModel, fakeData, cloneModel, allFakers, zh_CN, COUNT, DEEP } from '../index';
+import { faker, defineModel, fakeData, cloneModel, allFakers, zh_CN, COUNT, DEEP, fa } from '../index';
 import { describe, test } from 'vitest';
 
 describe('1.非装饰器语法mock数据测试', () => {
@@ -95,19 +95,37 @@ describe('1.非装饰器语法mock数据测试', () => {
     });
     console.dir(userDatas, { depth: Infinity });
   });
-  test.only('1.4 指定钩子函数', () => {
+  test('1.4 全局指定钩子函数', () => {
     DataFaker.setHooks({
-      beforeAllCbs: (schema) => {
-        return schema;
-      },
+      beforeAllCbs: [
+        (schema) => {
+          // age字段值固定为18而不是{ min: 18, max: 65 }
+          schema.age = () => {
+            return 18;
+          };
+          return schema;
+        },
+        (schema) => {
+          // 添加一个hobby字段
+          schema.hobby = ['helpers.arrayElements', ['篮球', '乒乓球']];
+          return schema;
+        },
+      ],
     });
-    const addressModel = defineModel('address', {
-      country: 'location.country',
-      city: 'location.city',
-      children: {
-        refModel: 'address',
+    // 用户模型
+    const userModel = defineModel('user', {
+      firstName: 'person.firstName',
+      secondName: 'person.lastName',
+      age: ['number.int', { min: 18, max: 65 }],
+      email: (ctx) => {
+        return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
+      address: { refModel: 'address', count: 1 },
     });
+    const userDatas = fakeData(userModel);
+    console.dir(userDatas, { depth: Infinity });
+  });
+  test('1.5 运行时指定钩子函数', () => {
     // 用户模型
     const userModel = defineModel('user', {
       firstName: 'person.firstName',
@@ -121,39 +139,96 @@ describe('1.非装饰器语法mock数据测试', () => {
     const userDatas = fakeData(userModel, {
       hooks: {
         beforeAllCbs: (schema) => {
+          schema.age = () => {
+            return 18;
+          };
           return schema;
         },
-        afterAllCbs: (data) => {
+      },
+    });
+    console.dir(userDatas, { depth: Infinity });
+  });
+  test('1.6钩子函数合并', () => {
+    const addressModel = defineModel('address', {
+      country: 'location.country',
+      city: 'location.city',
+      children: {
+        refModel: 'address',
+      },
+    });
+    // 用户模型
+    const userModel = defineModel('user', {
+      firstName: 'person.firstName',
+      secondName: 'person.lastName',
+      age: ['number.int', { min: 18, max: 65 }],
+      address: { refModel: 'address', count: 1 },
+    });
+    const userDatas = fakeData(userModel, {
+      hooks: {
+        afterAllCbs(data) {
+          console.log(data);
           return {
-            id: faker.string.uuid(),
+            email: faker.internet.email(),
             ...data,
           };
         },
-        beforeEachCbs: (schemaItem) => {
-          let { key, schema } = schemaItem;
-          if (key === 'age') {
-            schemaItem.schema = () => {
-              return 12;
-            };
+      },
+    });
+    console.dir(userDatas, { depth: Infinity });
+  });
+
+  test('1.7 beforeEach钩子函数修改', () => {
+    const addressModel = defineModel('address', {
+      country: 'location.country',
+      city: 'location.city',
+      children: {
+        refModel: 'address',
+      },
+    });
+    // 用户模型
+    const userModel = defineModel('user', {
+      firstName: 'person.firstName',
+      secondName: 'person.lastName',
+      age: ['number.int', { min: 18, max: 65 }],
+      address: { refModel: 'address', count: 1 },
+    });
+    const userDatas = fakeData(userModel, {
+      hooks: {
+        beforeEachCbs: (ctx) => {
+          if (ctx.type === 'object' && ctx.key === 'address') {
+            ctx.schema = () => null;
           }
-          return schemaItem;
+          return ctx;
         },
-        afterEachCbs: [
-          (dataItem) => {
-            let { key, value } = dataItem;
-            if (key === 'age') {
-              dataItem.value++;
-            }
-            return dataItem;
-          },
-          (dataItem) => {
-            let { key, value } = dataItem;
-            if (key === 'age') {
-              dataItem.value++;
-            }
-            return dataItem;
-          },
-        ],
+      },
+    });
+    console.dir(userDatas, { depth: Infinity });
+  });
+
+  test.only('1.8 afterEach钩子函数递归修改数据', () => {
+    const addressModel = defineModel('address', {
+      country: 'location.country',
+      city: 'location.city',
+      children: {
+        refModel: 'address',
+      },
+    });
+    // 用户模型
+    const userModel = defineModel('user', {
+      firstName: 'person.firstName',
+      secondName: 'person.lastName',
+      age: ['number.int', { min: 18, max: 65 }],
+      address: { refModel: 'address', count: 1 },
+    });
+    const userDatas = fakeData(userModel, {
+      hooks: {
+        afterEachCbs: (ctx) => {
+          if (ctx.type === 'object' && ctx.value) {
+            // 对所有引用类型添加id
+            ctx.value['id'] = faker.string.uuid();
+          }
+          return ctx;
+        },
       },
     });
     console.dir(userDatas, { depth: Infinity });

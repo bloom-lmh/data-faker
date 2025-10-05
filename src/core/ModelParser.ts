@@ -267,9 +267,6 @@ export class ModelParser {
    */
   private static executeHooks<T = any>(hooks: DataFakeCb = [], params: T): T {
     let result: any;
-    if (!hooks) {
-      return params;
-    }
     if (typeof hooks === 'function') {
       result = hooks(params);
     }
@@ -278,7 +275,7 @@ export class ModelParser {
         return cb(prev);
       }, params);
     }
-    return result;
+    return result || params;
   }
   /**
    * 解析路径方法字符串
