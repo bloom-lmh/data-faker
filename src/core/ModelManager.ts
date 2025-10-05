@@ -3,7 +3,7 @@ import { DModel } from './DataModel';
 import { ObjectUtils } from '@/utils/ObjectUtils';
 import { ClassDecoratorStateManager } from '@/common/ClassDecoratorStateManager';
 import { DECORATORNAME } from '@/constants/DecoratorConstants';
-import { DecoratedClass } from '@/types';
+import { DecoratedClass } from '@/types/decorator';
 
 /**
  * 模型管理器

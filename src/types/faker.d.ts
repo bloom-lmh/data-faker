@@ -1,6 +1,5 @@
-import { COUNT, DEEP } from './../../../constant/DataFakerConstants';
+import { COUNT, DEEP } from '@/constant/DataFakerConstants';
 import { Faker, allFakers, LocaleDefinition } from '@faker-js/faker';
-import { PropertyDecorator } from '../../decorator';
 import { DModel } from '@/core/DataModel';
 
 /**
@@ -104,7 +103,7 @@ type DataField = {
 /**
  * 模型数据结构
  */
-type ModelSchema = Record<string, DataFieldType>;
+type ModelSchema = Record<string | symbol, DataFieldType>;
 
 /**
  * 所有Fakers联合类型
@@ -133,7 +132,70 @@ type RefModelRule = {
    */
   [key: string | symbol]: number | RefModelRule | [number, number];
 };
+/**
+ * schema类型
+ */
+type SchemaType = 'function' | 'object' | 'array' | 'string';
+/**
+ * beforeEachCbs的上下文对象
+ */
+type BeforeEachContext = {
+  /**
+   * 每次循环的key
+   */
+  key: string | symbol;
+  /**
+   * schema
+   */
+  schema: DataFieldType;
+  /**
+   * 模板schema的类型
+   */
+  type: SchemaType;
+};
+/**
+ * beforeEachCbs返回值类型
+ */
+type BeforeEachReturn = { key: string | symbol; schema: DataFieldType };
+/**
+ * afterEachCbs的上下文对象
+ */
+type AfterEachContext = {
+  /**
+   * 每次循环的key
+   */
+  key: string | symbol;
+  /**
+   * 每次循环后的value
+   */
+  value: any;
+  /**
+   * 已经生成的数据结果
+   */
+  result: any;
+  /**
+   * 模板schema的类型
+   */
+  type: SchemaType;
+};
 
+/**
+ * 数据生成钩子
+ */
+type DataFakeHook = {
+  /**
+   * 数据生成之后的钩子
+   */
+  afterCbs?: DataFakeCb;
+  /**
+   * 每次循环之前的钩子
+   */
+  beforeEachCbs?: DataFakeCb<BeforeEachContext, BeforeEachReturn>;
+  /**
+   * 每次循环生成数据之后的钩子
+   */
+  afterEachCbs?: DataFakeCb<AfterEachContext>;
+};
 /**
  * 使用模型配置
  */
@@ -152,6 +214,10 @@ type DataFakeOptions = {
    */
   callbacks?: DataFakeCb;
   /**
+   * 钩子函数
+   */
+  hooks?: DataFakeHook;
+  /**
    * 语言环境
    */
   locale?: LocaleType;
@@ -160,4 +226,4 @@ type DataFakeOptions = {
 /**
  * 数据生成后的回调函数类型
  */
-type DataFakeCb = ((data: any) => any) | Array<(data: any) => any>;
+type DataFakeCb<T = any, M = any> = ((data: T) => M) | Array<(data: T) => M>;

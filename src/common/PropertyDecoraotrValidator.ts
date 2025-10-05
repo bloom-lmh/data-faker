@@ -1,6 +1,6 @@
 import { METADATAKEY } from '@/constants/MetaDataConstants';
 import { DecoratorValidator } from './DecoratorValidator';
-import { DecoratorInfos, DecoratedClass, DecoratedClassProto } from '@/types';
+import { DecoratorInfos, DecoratedClass, DecoratedClassProto } from '@/types/decorator';
 
 /**
  * 属性装饰器校验器
@@ -33,7 +33,7 @@ export class PropertyDecoratorValidator implements DecoratorValidator {
       return false;
     }
     // 判断是否有依赖的装饰器
-    return dpDecorators.every(dpDecoratorName => decoratorInfos.some(info => info.name === dpDecoratorName));
+    return dpDecorators.every((dpDecoratorName) => decoratorInfos.some((info) => info.name === dpDecoratorName));
   }
 
   /**
@@ -45,7 +45,7 @@ export class PropertyDecoratorValidator implements DecoratorValidator {
   isDecoratorConflict(
     target: DecoratedClass | DecoratedClassProto,
     conflictList: (string | symbol)[],
-    propertyKey: string | symbol,
+    propertyKey: string | symbol
   ): boolean {
     let decoratorInfos = Reflect.getMetadata(METADATAKEY.DECORATORINFOS, target, propertyKey) as DecoratorInfos;
     // 没有装饰器装饰直接返回false
@@ -53,8 +53,8 @@ export class PropertyDecoratorValidator implements DecoratorValidator {
       return false;
     }
     // 获取方法上存在的装饰器名
-    let decoratorNames = decoratorInfos.map(info => info.name);
+    let decoratorNames = decoratorInfos.map((info) => info.name);
     // 判断存在冲突装饰器
-    return conflictList.some(conflictName => decoratorNames.includes(conflictName));
+    return conflictList.some((conflictName) => decoratorNames.includes(conflictName));
   }
 }

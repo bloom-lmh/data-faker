@@ -49,12 +49,12 @@ export class DataFaker {
       options = { count: options };
     }
     // 获取生成数据规则和回调
-    const { count, refRules, callbacks, locale } = options || {};
+    const { count, refRules, callbacks, hooks, locale } = options || {};
     // 与全局语言环境合并
     let lc = LocaleParser.parseLocale(locale) || this.locale;
     // 解析数据
-    let data = ModelParser.setLocale(lc).parseModel(dataModel, count, refRules);
-    // 数据后处理
+    let data = ModelParser.setLocale(lc).setHooks(hooks).setRefRules(refRules).parseModel(dataModel, count);
+    /*  // 数据后处理
     let cbs = [...this.callbacks];
     if (typeof callbacks === 'function') {
       cbs.push(callbacks);
@@ -64,7 +64,7 @@ export class DataFaker {
     }
     cbs.forEach((cb) => {
       data = cb(data);
-    });
+    }); */
     return data;
   }
 }

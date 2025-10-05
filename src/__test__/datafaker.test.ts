@@ -95,7 +95,7 @@ describe('1.非装饰器语法mock数据测试', () => {
     });
     console.dir(userDatas, { depth: Infinity });
   });
-  test.only('1.4 指定后处理器', () => {
+  test.only('1.4 指定钩子函数', () => {
     DataFaker.setCallbacks((data) => {
       data['id'] = faker.string.uuid();
       return data;
@@ -103,6 +103,9 @@ describe('1.非装饰器语法mock数据测试', () => {
     const addressModel = defineModel('address', {
       country: 'location.country',
       city: 'location.city',
+      children: {
+        refModel: 'address',
+      },
     });
     // 用户模型
     const userModel = defineModel('user', {
@@ -115,20 +118,24 @@ describe('1.非装饰器语法mock数据测试', () => {
       address: { refModel: 'address', count: 1 },
     });
     const userDatas = fakeData(userModel, {
-      callbacks: [
-        (data) => {
+      hooks: {
+        afterCbs: (data) => {
           return {
-            sex: 'male',
+            id: faker.string.uuid(),
             ...data,
           };
         },
-        (data) => {
-          data.firstName = data.firstName.toUpperCase();
-          return data;
+        beforeEachCbs: (data) => {
+          return { key: data.key, schema: 'number.int' };
         },
-      ],
-      /* beforeFake: () => {},
-      afterFake: () => {}, */
+        /*  afterEachCbs: (data) => {
+          console.log(data);
+
+          let { key, value, type, result } = data;
+        
+          return value;
+        }, */
+      },
     });
     console.dir(userDatas, { depth: Infinity });
   });

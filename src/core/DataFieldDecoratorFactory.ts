@@ -3,7 +3,7 @@ import { DECORATORNAME } from '@/constants/DecoratorConstants';
 import { DecoratorInfo } from './DecoratorInfo';
 import { PropertyDecoratorValidator } from '@/common/PropertyDecoraotrValidator';
 import 'reflect-metadata';
-import { DecoratedClassOrProto } from '@/types';
+import { DecoratedClassOrProto } from '@/types/decorator';
 import { CustomGenerator, DataFieldType, FakerMethodParamsType, FakerMethodPath, RefModel } from '@/types/faker';
 /**
  * 数据字段装饰器工厂

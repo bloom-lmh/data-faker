@@ -1,6 +1,6 @@
 import { METADATAKEY } from '@/constants/MetaDataConstants';
 import { DecoratorInfo } from '@/core/DecoratorInfo';
-import { DecoratedClass } from '@/types';
+import { DecoratedClass } from '@/types/decorator';
 
 /**
  * 类状态管理器
@@ -44,7 +44,7 @@ export class ClassDecoratorStateManager {
   hasDecoratorInfo(target: DecoratedClass, decoratorName: string | symbol): boolean {
     const decoratorInfos = this.getDecoratorInfos(target);
     if (decoratorInfos) {
-      return decoratorInfos.some(info => info.name === decoratorName);
+      return decoratorInfos.some((info) => info.name === decoratorName);
     }
     return false;
   }
@@ -68,7 +68,7 @@ export class ClassDecoratorStateManager {
       return;
     } */
     // 获取已有的重复装饰器信息
-    const decoInfo = decoratorInfos.find(info => info.name === decoratorInfo.name);
+    const decoInfo = decoratorInfos.find((info) => info.name === decoratorInfo.name);
     //若有重复装饰器则仅添加配置
     if (decoInfo) {
       decoInfo.configs = [...decoInfo.configs, ...decoratorInfo.configs];
@@ -91,7 +91,7 @@ export class ClassDecoratorStateManager {
   getDecoratorInfo(target: DecoratedClass, decoratorName: string | symbol): DecoratorInfo | undefined {
     const decoratorInfos = this.getDecoratorInfos(target);
     if (decoratorInfos) {
-      return decoratorInfos.find(info => info.name === decoratorName);
+      return decoratorInfos.find((info) => info.name === decoratorName);
     }
     return undefined;
   }

@@ -29,7 +29,7 @@ export type ClassDecorator = (target: DecoratedClass) => void;
 export type MethodDecorator = (
   target: DecoratedClassOrProto,
   propertyKey: string | symbol,
-  descriptor: TypedPropertyDescriptor<any>,
+  descriptor: TypedPropertyDescriptor<any>
 ) => void;
 
 /**

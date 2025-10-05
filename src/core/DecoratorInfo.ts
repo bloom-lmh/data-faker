@@ -1,5 +1,5 @@
 import { DECORATORNAME } from '@/constants/DecoratorConstants';
-import { DecorationInfo } from '@/types';
+import { DecorationInfo } from '@/types/decorator';
 import { IdUtils } from '@/utils/IdUtils';
 
 /**

@@ -1,7 +1,7 @@
 import { ClassDecoratorValidator } from '@/common/ClassDecoratorValidator';
 import { DECORATORNAME } from '@/constants/DecoratorConstants';
 import { DecoratorInfo } from './DecoratorInfo';
-import { ClassDecorator, DecoratedClass } from '@/types';
+import { ClassDecorator, DecoratedClass } from '@/types/decorator';
 import { DataFieldType } from '@/types/faker';
 import { defineModel } from './ModelManager';
 
