@@ -62,11 +62,6 @@ export class ClassDecoratorStateManager {
   setDecoratorInfo(target: DecoratedClass, decoratorInfo: DecoratorInfo) {
     // 获取类上的装饰器信息列表
     const decoratorInfos = this.getDecoratorInfos(target) || [];
-    // 若没有装饰器列表信息则初始化
-    /*  if (!decoratorInfos) {
-      this.setDecoratorInfos(target, [decoratorInfo]);
-      return;
-    } */
     // 获取已有的重复装饰器信息
     const decoInfo = decoratorInfos.find((info) => info.name === decoratorInfo.name);
     //若有重复装饰器则仅添加配置

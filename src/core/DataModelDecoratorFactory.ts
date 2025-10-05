@@ -4,6 +4,7 @@ import { DecoratorInfo } from './DecoratorInfo';
 import { ClassDecorator, DecoratedClass } from '@/types/decorator';
 import { DataFieldType } from '@/types/faker';
 import { defineModel } from './ModelManager';
+import { ClassDecoratorStateManager } from '@/common/ClassDecoratorStateManager';
 
 /**
  * 数据模型装饰器工厂类
@@ -18,6 +19,10 @@ export class DataModelDecoratorFactory {
    */
   protected decoratorValidator: ClassDecoratorValidator = ClassDecoratorValidator.getInstance();
 
+  /**
+   * 状态管理器
+   */
+  protected stateManager: ClassDecoratorStateManager = ClassDecoratorStateManager.getInstance();
   /**
    * 初始化装饰器信息
    */
@@ -47,6 +52,8 @@ export class DataModelDecoratorFactory {
     modelSchema = this.extendSchema(target.prototype, modelSchema);
     // 创建数据模型对象
     defineModel(modelName, modelSchema);
+    // 设置状态
+    this.stateManager.setDecoratorInfo(target, this.decoratorInfo);
   }
 
   /**

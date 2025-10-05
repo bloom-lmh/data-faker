@@ -65,6 +65,10 @@ type RefModelOptions = {
    * 引用自身时的递归深度
    */
   deep?: number;
+  /**
+   * 保留最后一项，并使用null显示
+   */
+  //remain?: boolean;
 };
 /**
  * 引用模型配置
@@ -127,6 +131,7 @@ type RefModelRule = {
    * 引用自身时的递归深度
    */
   [DEEP]?: number;
+
   /**
    * 结构递归
    */
@@ -217,11 +222,6 @@ type DataFakeOptions = {
    * 对于引用类型的规则
    */
   refRules?: RefModelRule;
-  /**
-   * 回调函数
-   * @description 对生成的数据进行后处理
-   */
-  callbacks?: DataFakeCb;
   /**
    * 钩子函数
    */

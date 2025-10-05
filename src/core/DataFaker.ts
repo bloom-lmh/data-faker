@@ -68,7 +68,10 @@ export class DataFaker {
   /**
    * 伪造数据
    */
-  static fake(dataModel: DModel | string | symbol, options?: DataFakeOptions | number) {
+  static fake(dataModel: DModel | string | symbol | undefined | null, options?: DataFakeOptions | number) {
+    if (!dataModel) {
+      return null;
+    }
     // 生成数量
     if (typeof options === 'number') {
       options = { count: options };
@@ -77,7 +80,6 @@ export class DataFaker {
     let { count, refRules, hooks, locale } = options || {};
     // 合并hooks
     hooks = this.unionHooks(hooks);
-
     // 与全局语言环境合并
     let lc = LocaleParser.parseLocale(locale) || this.locale;
     // 解析数据
@@ -90,6 +92,6 @@ export class DataFaker {
 /**
  * 伪造数据
  */
-export function fakeData(dataModel: DModel | string | symbol, options?: DataFakeOptions | number) {
+export function fakeData(dataModel: DModel | string | symbol | undefined | null, options?: DataFakeOptions | number) {
   return DataFaker.fake(dataModel, options);
 }

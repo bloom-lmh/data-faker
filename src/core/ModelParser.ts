@@ -144,6 +144,10 @@ export class ModelParser {
       // 处理引用模型
       else if (typeof schema === 'object' && schema !== null) {
         result[key] = this.parseRefSchema(schema, rules, key, path, currentDepth);
+        // 删除null项
+        if (!result[key]) {
+          delete result[key];
+        }
       }
       // 没有对应的类型
       else {
@@ -196,12 +200,12 @@ export class ModelParser {
    * 处理数组schema
    */
   private static parseArraySchema(schema: Array<any>) {
-    let [methodPath, params] = schema;
+    let [methodPath, ...params] = schema;
     let fakerMethod = this.parsePathMethod(methodPath);
     if (!fakerMethod || typeof fakerMethod !== 'function') {
       return null;
     } else {
-      return (fakerMethod! as Function)(params);
+      return (fakerMethod! as Function).call(this, ...params);
     }
   }
   /**
@@ -233,19 +237,21 @@ export class ModelParser {
     } else {
       // 字符串形式则从模型管理器获取
       refModel = schema.refModel instanceof DModel ? schema.refModel : ModelManager.getDataModel(schema.refModel);
+
       // 合并默认值,后续配置优先级高于前面
       rls[COUNT] = rls[COUNT] ?? schema.count ?? 1;
-      rls[DEEP] = rls[DEEP] ?? schema.deep ?? rules[DEEP];
+      rls[DEEP] = rls[DEEP] ?? schema.deep ?? 1;
     }
 
     if (refModel) {
       const modelName = refModel.getModelName();
       const isCircular = path.has(modelName);
 
-      // 自动处理循环引用
+      // 如果是循环引用
       if (isCircular) {
         // 默认循环引用深度为1
         rls[DEEP] = rls[DEEP] ?? 1;
+        rls = { ...rls, ...rules };
       }
 
       // 克隆path以避免污染
@@ -255,9 +261,12 @@ export class ModelParser {
       } else if (rls[COUNT] === 1) {
         return this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0);
       } else {
-        return Array.from({ length: rls[COUNT] as number }, () =>
-          this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0)
+        let res = Array.from({ length: rls[COUNT] as number }, () =>
+          this.parseScheme(refModel.getModelSchema(), rls as RefModelRule, newPath, isCircular ? currentDepth + 1 : 0)
         );
+        // 删除最后一层递归为null的数据
+        if (!res || res.length === 0 || res.every((item) => item === null)) return null;
+        return res;
       }
     }
     return null;

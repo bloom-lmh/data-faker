@@ -13,6 +13,11 @@ export class ModelManager {
    * 数据模型映射
    */
   private static dataModelMap: Map<string | symbol, DModel> = new Map();
+
+  /**
+   * 状态管理器
+   */
+  protected static stateManager: ClassDecoratorStateManager = ClassDecoratorStateManager.getInstance();
   /**
    * 定义模型
    */
@@ -42,10 +47,8 @@ export class ModelManager {
     let modelName;
     if (typeof target === 'function') {
       // 获取装饰器配置
-      const decoratorInfo = ClassDecoratorStateManager.getInstance().getDecoratorInfo(
-        target.prototype,
-        DECORATORNAME.DATAMODEL
-      );
+      const decoratorInfo = this.stateManager.getDecoratorInfo(target, DECORATORNAME.DATAMODEL);
+
       modelName = decoratorInfo?.configs[0];
     } else {
       modelName = target;
