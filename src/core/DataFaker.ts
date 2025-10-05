@@ -1,6 +1,14 @@
 import { Faker, faker } from '@faker-js/faker';
 import { DModel } from './DataModel';
-import { DataFakeCb, DataFakeOptions, LocaleType } from '@/types/faker';
+import {
+  AfterEachContext,
+  BeforeEachContext,
+  DataFakeCb,
+  DataFakeHook,
+  DataFakeOptions,
+  LocaleType,
+  ModelSchema,
+} from '@/types/faker';
 import { ModelParser } from './ModelParser';
 import { LocaleParser } from './LocaleParser';
 
@@ -19,7 +27,7 @@ export class DataFaker {
   /**
    * 全局回调函数
    */
-  static callbacks: Array<(data: any) => any> = [];
+  static hooks: DataFakeHook;
 
   /**
    * 设置当前语言环境
@@ -32,13 +40,30 @@ export class DataFaker {
   /**
    * 设置全局回调函数
    */
-  static setCallbacks(callbacks: DataFakeCb) {
-    if (typeof callbacks === 'function') {
-      this.callbacks.push(callbacks);
-    }
-    if (Array.isArray(callbacks) && callbacks.length > 0) {
-      this.callbacks = [...this.callbacks, ...callbacks];
-    }
+  static setHooks(hooks: DataFakeHook = {}) {
+    this.hooks = hooks;
+  }
+  /**
+   * 合并hooks
+   */
+  static unionHooks(runtimeHooks?: DataFakeHook): DataFakeHook {
+    if (!this.hooks) return runtimeHooks || {};
+    if (!runtimeHooks) return this.hooks;
+
+    return {
+      beforeAllCbs: this.mergeCb(runtimeHooks.beforeAllCbs, this.hooks.beforeAllCbs),
+      afterAllCbs: this.mergeCb(runtimeHooks.afterAllCbs, this.hooks.afterAllCbs),
+      beforeEachCbs: this.mergeCb(runtimeHooks.beforeEachCbs, this.hooks.beforeEachCbs),
+      afterEachCbs: this.mergeCb(runtimeHooks.afterEachCbs, this.hooks.afterEachCbs),
+    };
+  }
+  /**
+   * 合并回调函数
+   */
+  private static mergeCb<T>(a?: DataFakeCb<T>, b?: DataFakeCb<T>): ((data: T) => T)[] {
+    const arrA = a ? (Array.isArray(a) ? a : [a]) : [];
+    const arrB = b ? (Array.isArray(b) ? b : [b]) : [];
+    return [...arrA, ...arrB];
   }
   /**
    * 伪造数据
@@ -49,22 +74,16 @@ export class DataFaker {
       options = { count: options };
     }
     // 获取生成数据规则和回调
-    const { count, refRules, callbacks, hooks, locale } = options || {};
+    let { count, refRules, hooks, locale } = options || {};
+    // 合并hooks
+    hooks = this.unionHooks(hooks);
+    console.log(hooks);
+
     // 与全局语言环境合并
     let lc = LocaleParser.parseLocale(locale) || this.locale;
     // 解析数据
     let data = ModelParser.setLocale(lc).setHooks(hooks).setRefRules(refRules).parseModel(dataModel, count);
-    /*  // 数据后处理
-    let cbs = [...this.callbacks];
-    if (typeof callbacks === 'function') {
-      cbs.push(callbacks);
-    }
-    if (Array.isArray(callbacks) && callbacks.length > 0) {
-      cbs = [...cbs, ...callbacks];
-    }
-    cbs.forEach((cb) => {
-      data = cb(data);
-    }); */
+    // 返回数据
     return data;
   }
 }

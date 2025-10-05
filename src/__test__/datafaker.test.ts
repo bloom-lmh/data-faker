@@ -96,9 +96,10 @@ describe('1.非装饰器语法mock数据测试', () => {
     console.dir(userDatas, { depth: Infinity });
   });
   test.only('1.4 指定钩子函数', () => {
-    DataFaker.setCallbacks((data) => {
-      data['id'] = faker.string.uuid();
-      return data;
+    DataFaker.setHooks({
+      beforeAllCbs: (schema) => {
+        return schema;
+      },
     });
     const addressModel = defineModel('address', {
       country: 'location.country',
@@ -119,22 +120,40 @@ describe('1.非装饰器语法mock数据测试', () => {
     });
     const userDatas = fakeData(userModel, {
       hooks: {
-        afterCbs: (data) => {
+        beforeAllCbs: (schema) => {
+          return schema;
+        },
+        afterAllCbs: (data) => {
           return {
             id: faker.string.uuid(),
             ...data,
           };
         },
-        beforeEachCbs: (data) => {
-          return { key: data.key, schema: 'number.int' };
+        beforeEachCbs: (schemaItem) => {
+          let { key, schema } = schemaItem;
+          if (key === 'age') {
+            schemaItem.schema = () => {
+              return 12;
+            };
+          }
+          return schemaItem;
         },
-        /*  afterEachCbs: (data) => {
-          console.log(data);
-
-          let { key, value, type, result } = data;
-        
-          return value;
-        }, */
+        afterEachCbs: [
+          (dataItem) => {
+            let { key, value } = dataItem;
+            if (key === 'age') {
+              dataItem.value++;
+            }
+            return dataItem;
+          },
+          (dataItem) => {
+            let { key, value } = dataItem;
+            if (key === 'age') {
+              dataItem.value++;
+            }
+            return dataItem;
+          },
+        ],
       },
     });
     console.dir(userDatas, { depth: Infinity });

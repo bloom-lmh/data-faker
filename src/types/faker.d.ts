@@ -152,11 +152,12 @@ type BeforeEachContext = {
    * 模板schema的类型
    */
   type: SchemaType;
+  /**
+   * 所属对象
+   */
+  belongTo: string | symbol;
 };
-/**
- * beforeEachCbs返回值类型
- */
-type BeforeEachReturn = { key: string | symbol; schema: DataFieldType };
+
 /**
  * afterEachCbs的上下文对象
  */
@@ -177,6 +178,10 @@ type AfterEachContext = {
    * 模板schema的类型
    */
   type: SchemaType;
+  /**
+   * 所属对象
+   */
+  belongTo: string | symbol;
 };
 
 /**
@@ -184,13 +189,17 @@ type AfterEachContext = {
  */
 type DataFakeHook = {
   /**
+   * 数据生成前的钩子
+   */
+  beforeAllCbs?: DataFakeCb<ModelSchema>;
+  /**
    * 数据生成之后的钩子
    */
-  afterCbs?: DataFakeCb;
+  afterAllCbs?: DataFakeCb;
   /**
    * 每次循环之前的钩子
    */
-  beforeEachCbs?: DataFakeCb<BeforeEachContext, BeforeEachReturn>;
+  beforeEachCbs?: DataFakeCb<BeforeEachContext>;
   /**
    * 每次循环生成数据之后的钩子
    */
@@ -226,4 +235,4 @@ type DataFakeOptions = {
 /**
  * 数据生成后的回调函数类型
  */
-type DataFakeCb<T = any, M = any> = ((data: T) => M) | Array<(data: T) => M>;
+type DataFakeCb<T = any> = ((data: T) => T) | Array<(data: T) => T>;
