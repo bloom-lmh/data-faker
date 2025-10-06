@@ -58,7 +58,7 @@ export class ModelParser {
     return this;
   }
   /**
-   * 使用的模型
+   * 解析模型
    */
   static parseModel(dataModel: DModel | string | symbol, count: number = 1) {
     let model = dataModel instanceof DModel ? dataModel : ModelManager.getDataModel(dataModel);
