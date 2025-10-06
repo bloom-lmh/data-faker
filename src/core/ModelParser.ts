@@ -1,4 +1,4 @@
-import { DEEP, COUNT } from '@/constants/DataFakerConstants';
+import { DEEP, COUNT } from '../constants/DataFakerConstants';
 import {
   RefModelRule,
   ModelSchema,
@@ -9,8 +9,8 @@ import {
   AfterEachContext,
   SchemaType,
   BeforeEachContext,
-} from '@/types/faker';
-import { faker, Faker, th } from '@faker-js/faker';
+} from '../types/faker';
+import { faker, Faker } from '@faker-js/faker';
 import { DModel } from './DataModel';
 import { ModelManager } from './ModelManager';
 
@@ -20,7 +20,7 @@ import { ModelManager } from './ModelManager';
 export class ModelParser {
   /**
    * 当前语言
-   * @default 英文环境
+   * ..default 英文环境
    */
   private static locale: Faker = faker;
 
@@ -36,7 +36,7 @@ export class ModelParser {
 
   /**
    * 设置当前语言环境
-   * @param locale 语言环境
+   * ..param locale 语言环境
    */
   static setLocale(locale: Faker) {
     this.locale = locale;
@@ -93,7 +93,7 @@ export class ModelParser {
     modelSchema: ModelSchema,
     rules: RefModelRule,
     path: Set<string | symbol> = new Set(),
-    currentDepth: number = 0
+    currentDepth: number = 0,
   ): Record<string | symbol, any> | null {
     // 没有模式返回空
     if (!modelSchema) {
@@ -168,7 +168,7 @@ export class ModelParser {
     }
     // 处理函数
     if (fnShemaList && fnShemaList.length > 0) {
-      fnShemaList.forEach((fnItem) => {
+      fnShemaList.forEach(fnItem => {
         let [key, value] = Object.entries(fnItem!)[0];
         result[key] = (value as Function)(result);
         if (afterEachCbs) {
@@ -216,7 +216,7 @@ export class ModelParser {
     rules: RefModelRule,
     key: string | symbol,
     path: Set<string | symbol>,
-    currentDepth: number = 0
+    currentDepth: number = 0,
   ) {
     let refModel;
     let rls = rules[key] === undefined || rules[key] === null ? {} : rules[key];
@@ -262,10 +262,10 @@ export class ModelParser {
         return this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0);
       } else {
         let res = Array.from({ length: rls[COUNT] as number }, () =>
-          this.parseScheme(refModel.getModelSchema(), rls as RefModelRule, newPath, isCircular ? currentDepth + 1 : 0)
+          this.parseScheme(refModel.getModelSchema(), rls as RefModelRule, newPath, isCircular ? currentDepth + 1 : 0),
         );
         // 删除最后一层递归为null的数据
-        if (!res || res.length === 0 || res.every((item) => item === null)) return null;
+        if (!res || res.length === 0 || res.every(item => item === null)) return null;
         return res;
       }
     }

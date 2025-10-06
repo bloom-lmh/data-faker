@@ -1,10 +1,10 @@
-import { ClassDecoratorValidator } from '@/common/ClassDecoratorValidator';
-import { DECORATORNAME } from '@/constants/DecoratorConstants';
+import { ClassDecoratorValidator } from '../common/ClassDecoratorValidator';
+import { DECORATORNAME } from '../constants/DecoratorConstants';
 import { DecoratorInfo } from './DecoratorInfo';
-import { ClassDecorator, DecoratedClass } from '@/types/decorator';
-import { DataFieldType } from '@/types/faker';
+import { ClassDecorator, DecoratedClass } from '../types/decorator';
+import { DataFieldType } from '../types/faker';
 import { defineModel } from './ModelManager';
-import { ClassDecoratorStateManager } from '@/common/ClassDecoratorStateManager';
+import { ClassDecoratorStateManager } from '../common/ClassDecoratorStateManager';
 
 /**
  * 数据模型装饰器工厂类
@@ -42,8 +42,8 @@ export class DataModelDecoratorFactory {
   }
   /**
    * 获取模型并注入工厂
-   * @param target 被装饰的类
-   * @param modelName 模型名
+   * ..param target 被装饰的类
+   * ..param modelName 模型名
    */
   protected setupState(target: DecoratedClass, modelName: string | symbol): void {
     this.decoratorInfo.setConfig(modelName);
@@ -71,7 +71,7 @@ export class DataModelDecoratorFactory {
 
   /**
    * 创建装饰器
-   * @param modelName 模型名
+   * ..param modelName 模型名
    */
   public createDecorator(modelName: string | symbol): ClassDecorator {
     return (target: DecoratedClass) => {

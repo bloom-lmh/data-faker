@@ -1,10 +1,9 @@
-import { DECORATORNAME } from '@/constants/DecoratorConstants';
-
+import { DECORATORNAME } from '../constants/DecoratorConstants';
 import { DecoratorInfo } from './DecoratorInfo';
-import { PropertyDecoratorValidator } from '@/common/PropertyDecoraotrValidator';
+import { PropertyDecoratorValidator } from '../common/PropertyDecoraotrValidator';
 import 'reflect-metadata';
-import { DecoratedClassOrProto } from '@/types/decorator';
-import { CustomGenerator, DataFieldType, FakerMethodParamsType, FakerMethodPath, RefModel } from '@/types/faker';
+import { DecoratedClassOrProto } from '../types/decorator';
+import { CustomGenerator, DataFieldType, FakerMethodParamsType, FakerMethodPath, RefModel } from '../types/faker';
 /**
  * 数据字段装饰器工厂
  */
@@ -38,9 +37,9 @@ export class DataFieldDecoratorFactory {
 
   /**
    * 设置状态
-   * @param target 被装饰的类或原型
-   * @param propertyKey 被装饰的属性名
-   * @param config  配置
+   * ..param target 被装饰的类或原型
+   * ..param propertyKey 被装饰的属性名
+   * ..param config  配置
    */
   protected setupState(target: DecoratedClassOrProto, propertyKey: string | symbol, config: DataFieldType): void {
     let modelSchema =
@@ -68,7 +67,7 @@ export class DataFieldDecoratorFactory {
  * 数据字段装饰器
  */
 export function DataField<P extends FakerMethodPath>(
-  options: FakerMethodPath | [P, FakerMethodParamsType<P>] | CustomGenerator | RefModel
+  options: FakerMethodPath | [P, FakerMethodParamsType<P>] | CustomGenerator | RefModel,
 ) {
   return new DataFieldDecoratorFactory().createDecorator(options);
 }

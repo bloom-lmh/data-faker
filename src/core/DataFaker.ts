@@ -1,14 +1,6 @@
 import { Faker, faker } from '@faker-js/faker';
 import { DModel } from './DataModel';
-import {
-  AfterEachContext,
-  BeforeEachContext,
-  DataFakeCb,
-  DataFakeHook,
-  DataFakeOptions,
-  LocaleType,
-  ModelSchema,
-} from '@/types/faker';
+import { DataFakeCb, DataFakeHook, DataFakeOptions, LocaleType } from '../types/faker';
 import { ModelParser } from './ModelParser';
 import { LocaleParser } from './LocaleParser';
 
@@ -20,7 +12,7 @@ import { LocaleParser } from './LocaleParser';
 export class DataFaker {
   /**
    * 当前语言
-   * @default 英文环境
+   * ..default 英文环境
    */
   static locale: Faker = faker;
 
@@ -31,7 +23,7 @@ export class DataFaker {
 
   /**
    * 设置当前语言环境
-   * @param locale 语言环境
+   * ..param locale 语言环境
    */
   static setLocale(locale?: LocaleType) {
     this.locale = LocaleParser.parseLocale(locale) || faker;

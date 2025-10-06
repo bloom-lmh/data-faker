@@ -1,6 +1,6 @@
-import { DECORATORNAME } from '@/constants/DecoratorConstants';
-import { DecorationInfo } from '@/types/decorator';
-import { IdUtils } from '@/utils/IdUtils';
+import { DECORATORNAME } from '../constants/DecoratorConstants';
+import { DecorationInfo } from '../types/decorator';
+import { IdUtils } from '../utils/IdUtils';
 
 /**
  * 装饰器信息建造者
@@ -13,7 +13,7 @@ export class DecoratorInfo implements DecorationInfo {
 
   /**
    * 装饰器名称
-   * @default DECORATORNAME.ANONYMOUSE
+   * ..default DECORATORNAME.ANONYMOUSE
    */
   name: string | symbol = DECORATORNAME.ANONYMOUSE;
 
@@ -34,8 +34,8 @@ export class DecoratorInfo implements DecorationInfo {
 
   /**
    * 构造器
-   * @param decoratorInfo 装饰器信息对象
-   * @returns 装饰器信息对象
+   * ..param decoratorInfo 装饰器信息对象
+   * ..returns 装饰器信息对象
    */
   constructor(decoratorInfo?: DecorationInfo) {
     if (!decoratorInfo) {

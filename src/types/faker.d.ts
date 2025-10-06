@@ -1,6 +1,6 @@
-import { COUNT, DEEP } from '@/constant/DataFakerConstants';
+import { COUNT, DEEP } from '../constant/DataFakerConstants';
 import { Faker, allFakers, LocaleDefinition } from '@faker-js/faker';
-import { DModel } from '@/core/DataModel';
+import { DModel } from '../core/DataModel';
 
 /**
  * faker模块联合类型

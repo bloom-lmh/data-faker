@@ -1,19 +1,5 @@
 import { DataFaker } from '@/core/DataFaker';
-import {
-  faker,
-  defineModel,
-  fakeData,
-  cloneModel,
-  allFakers,
-  zh_CN,
-  COUNT,
-  DEEP,
-  fa,
-  DataField,
-  DataModel,
-  de,
-  useModel,
-} from '../index';
+import { faker, defineModel, fakeData, zh_CN, COUNT, DEEP, fa, DataField, DataModel, de, useModel } from '../index';
 import { describe, test } from 'vitest';
 
 describe('1.非装饰器语法mock数据测试', () => {
@@ -28,7 +14,7 @@ describe('1.非装饰器语法mock数据测试', () => {
       secondeName: 'person.lastName',
       age: ['number.int', { min: 18, max: 65 }],
       hobby: ['helpers.arrayElements', ['篮球', '足球', '乒乓球', '羽毛球']],
-      email: (ctx) => {
+      email: ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
       address: addressModel,
@@ -55,7 +41,7 @@ describe('1.非装饰器语法mock数据测试', () => {
       firstName: 'person.firstName',
       secondName: 'person.lastName',
       age: ['number.int', { min: 18, max: 65 }],
-      email: (ctx) => {
+      email: ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
       address: { refModel: 'address', count: 1 },
@@ -94,7 +80,7 @@ describe('1.非装饰器语法mock数据测试', () => {
       firstName: 'person.firstName',
       secondName: 'person.lastName',
       age: ['number.int', { min: 18, max: 65 }],
-      email: (ctx) => {
+      email: ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
       address: { refModel: 'address', count: 1 },
@@ -112,14 +98,14 @@ describe('1.非装饰器语法mock数据测试', () => {
   test('1.4 全局指定钩子函数', () => {
     DataFaker.setHooks({
       beforeAllCbs: [
-        (schema) => {
+        schema => {
           // age字段值固定为18而不是{ min: 18, max: 65 }
           schema.age = () => {
             return 18;
           };
           return schema;
         },
-        (schema) => {
+        schema => {
           // 添加一个hobby字段
           schema.hobby = ['helpers.arrayElements', ['篮球', '乒乓球']];
           return schema;
@@ -131,7 +117,7 @@ describe('1.非装饰器语法mock数据测试', () => {
       firstName: 'person.firstName',
       secondName: 'person.lastName',
       age: ['number.int', { min: 18, max: 65 }],
-      email: (ctx) => {
+      email: ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
       address: { refModel: 'address', count: 1 },
@@ -145,14 +131,14 @@ describe('1.非装饰器语法mock数据测试', () => {
       firstName: 'person.firstName',
       secondName: 'person.lastName',
       age: ['number.int', { min: 18, max: 65 }],
-      email: (ctx) => {
+      email: ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
       },
       address: { refModel: 'address', count: 1 },
     });
     const userDatas = fakeData(userModel, {
       hooks: {
-        beforeAllCbs: (schema) => {
+        beforeAllCbs: schema => {
           schema.age = () => {
             return 18;
           };
@@ -208,7 +194,7 @@ describe('1.非装饰器语法mock数据测试', () => {
     });
     const userDatas = fakeData(userModel, {
       hooks: {
-        beforeEachCbs: (ctx) => {
+        beforeEachCbs: ctx => {
           if (ctx.type === 'object' && ctx.key === 'address') {
             ctx.schema = () => null;
           }
@@ -236,7 +222,7 @@ describe('1.非装饰器语法mock数据测试', () => {
     });
     const userDatas = fakeData(userModel, {
       hooks: {
-        afterEachCbs: (ctx) => {
+        afterEachCbs: ctx => {
           if (ctx.type === 'object' && ctx.value) {
             // 对所有引用类型添加id
             ctx.value['id'] = faker.string.uuid();
@@ -305,7 +291,7 @@ describe('1.非装饰器语法mock数据测试', () => {
       declare secondName: string;
       @DataField(['number.int', { min: 18, max: 65 }])
       declare age: number;
-      @DataField((ctx) => {
+      @DataField(ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
       })
       declare email: string;
@@ -320,7 +306,7 @@ describe('1.非装饰器语法mock数据测试', () => {
   test('2.1 装饰器语法', () => {
     @DataModel('person')
     class Person {
-      @DataField((ctx) => {
+      @DataField(ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
       })
       declare email: string;
@@ -344,7 +330,7 @@ describe('1.非装饰器语法mock数据测试', () => {
   test.only('2.2 装饰器语法获取模型', () => {
     @DataModel('person')
     class Person {
-      @DataField((ctx) => {
+      @DataField(ctx => {
         return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
       })
       declare email: string;

@@ -1,6 +1,6 @@
-import { METADATAKEY } from '@/constants/MetaDataConstants';
+import { METADATAKEY } from '../constants/MetaDataConstants';
 import { DecoratorValidator } from './DecoratorValidator';
-import { DecoratorInfos, DecoratedClass } from '@/types/decorator';
+import { DecoratorInfos, DecoratedClass } from '../types/decorator';
 /**
  * 类装饰器校验器
  * @description 封装装饰器校验的通用方法
@@ -33,7 +33,7 @@ export class ClassDecoratorValidator implements DecoratorValidator {
       return false;
     }
     // 判断是否有依赖的装饰器
-    return dpDecorators.every((dpDecoratorName) => decoratorInfos.some((info) => info.name === dpDecoratorName));
+    return dpDecorators.every(dpDecoratorName => decoratorInfos.some(info => info.name === dpDecoratorName));
   }
 
   /**
@@ -46,8 +46,8 @@ export class ClassDecoratorValidator implements DecoratorValidator {
     if (!decoratorInfos || decoratorInfos.length === 0) {
       return false;
     }
-    const existingDecorNames = decoratorInfos.map((info) => info.name);
+    const existingDecorNames = decoratorInfos.map(info => info.name);
     // 若类上已有装饰器包含在冲突列表表示装饰器冲突
-    return conflictList.some((conflictDecorName) => existingDecorNames.includes(conflictDecorName));
+    return conflictList.some(conflictDecorName => existingDecorNames.includes(conflictDecorName));
   }
 }
