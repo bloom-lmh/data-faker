@@ -1,6 +1,8 @@
 # Data Faker
 
-注意下面的仅仅是演示案例，具体详情请参见[DataFaker 官网]()
+注意下面的仅仅是演示案例，具体详情请参见
+[DataFaker 国外官网](https://df-docs-lgxj441cg-bloom-lmh.vercel.app/)
+[DataFaker 国内官网](https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/)
 
 ## 起步
 
@@ -86,7 +88,7 @@ const userModel = defineModel('user', {
   secondeName: 'person.lastName',
   age: ['number.int', { min: 18, max: 65 }],
   hobby: ['helpers.arrayElements', ['篮球', '足球', '乒乓球', '羽毛球']],
-  email: (ctx) => {
+  email: ctx => {
     return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
   },
   address: addressModel,
@@ -117,7 +119,7 @@ const userModel = defineModel('user', {
   firstName: 'person.firstName',
   secondName: 'person.lastName',
   age: ['number.int', { min: 18, max: 65 }],
-  email: (ctx) => {
+  email: ctx => {
     return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
   },
   children: {
@@ -187,7 +189,7 @@ const userModel = defineModel('user', {
 });
 const userDatas = fakeData(userModel, {
   hooks: {
-    afterEachCbs: (ctx) => {
+    afterEachCbs: ctx => {
       if (ctx.type === 'object' && ctx.value) {
         // 对所有引用类型添加id
         ctx.value['id'] = faker.string.uuid();
@@ -413,7 +415,7 @@ class User {
   declare secondName: string;
   @DataField(['number.int', { min: 18, max: 65 }])
   declare age: number;
-  @DataField((ctx) => {
+  @DataField(ctx => {
     return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
   })
   declare email: string;
@@ -472,7 +474,7 @@ console.dir(userDatas, { depth: Infinity });
 ```ts
 @DataModel('person')
 class Person {
-  @DataField((ctx) => {
+  @DataField(ctx => {
     return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
   })
   declare email: string;
@@ -538,7 +540,7 @@ console.dir(userDatas, { depth: Infinity });
 ```ts
 // 全局定义beforeAllCbs回调函数
 DataFaker.setHooks({
-  beforeAllCbs: (schema) => {
+  beforeAllCbs: schema => {
     console.log(schema);
     return schema;
   },

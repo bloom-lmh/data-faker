@@ -3,7 +3,7 @@ export { DataModel } from './core/DataModelDecoratorFactory';
 export { DataField } from './core/DataFieldDecoratorFactory';
 
 // 数据生成函数
-export { fakeData } from './core/DataFaker';
+export { fakeData, DataFaker } from './core/DataFaker';
 
 // 模型管理工具
 export { useModel, cloneModel, defineModel } from './core/ModelManager';
