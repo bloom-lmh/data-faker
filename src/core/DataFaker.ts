@@ -87,3 +87,4 @@ export class DataFaker {
 export function fakeData(dataModel: DModel | string | symbol | undefined | null, options?: DataFakeOptions | number) {
   return DataFaker.fake(dataModel, options);
 }
+

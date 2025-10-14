@@ -1,0 +1,13 @@
+# Changelog
+
+## [0.0.6] - 2025-10-6
+
+### Fixed
+
+- Fixed the issue where the DataFaker object could not be exported.（修复 DataFaker 对象无法导出的问题）
+
+## [0.0.7] - 2025-10-14
+
+### Added
+
+- Added English documentation.（添加英文说明文档）

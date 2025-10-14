@@ -7,6 +7,7 @@ import { DecoratedClass } from '../types/decorator';
 
 /**
  * 模型管理器
+ * @工厂方法模式
  */
 export class ModelManager {
   /**

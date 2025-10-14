@@ -1,46 +1,49 @@
-# Getting Started
+# Data Faker
 
-[Official Website](https://df-docs-lgxj441cg-bloom-lmh.vercel.app/)
-[中文官网](https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/)
+注意下面的仅仅是演示案例，具体详情请参见
+[DataFaker 国外官网](https://df-docs-lgxj441cg-bloom-lmh.vercel.app/)
+[DataFaker 国内官网](https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/)
 
-## Introduction
+## 起步
 
-`DataFaker` is a data generator that relies on `faker.js` under the hood while extending it with template syntax. It enables you to quickly generate various types of data, including referenced data and recursive data, meeting your data generation needs across different scenarios. It is particularly suitable for the following use cases:
+### 介绍
 
-- Mock data for front-end development
-- Unit testing and integration testing
-- API interface prototyping
-- Database sample data generation
-- Demonstration and teaching examples
+`DataFaker` 是一个数据生成器，底层依赖 `faker.js`，并在之上扩展了模板语法，能够帮助你快速生成各类的数据，包括引用数据和递归数据，满足你在不同场景下各类数据的生成需求。它特别适用于以下场景：
 
-[A Tribute to faker.js](https://faker.nodejs.cn/guide/)
+- 前端开发中的模拟数据
+- 单元测试和集成测试
+- API 接口原型设计
+- 数据库样本数据生成
+- 演示和教学用例
 
-## Features
+[致敬 faker.js](https://faker.nodejs.cn/guide/)
 
-- **Non-intrusive**: `DataFaker` only enhances `faker.js` without modifying it. You can still use `faker.js` as you did before.
-- **Templating**: `DataFaker` defines data structures using templates, similar to defining database table structures.
-- **Model-oriented**: `DataFaker` encapsulates templates into models, using models as basic units and providing a model reuse mechanism to allow your data templates to be reused in multiple places.
-- **Context mechanism**: `DataFaker` adopts a context mechanism to maintain the correlation between data.
-- **Multi-language support**: Leveraging the underlying `faker.js`, `DataFaker` also supports more than 70 language environments.
-- **Multi-data source**: With the help of `faker.js`'s underlying database, `DataFaker` can generate data covering 26 categories such as animals and books.
-- **Configurable**: `DataFaker` supports personalized configuration methods.
+### 特性
 
-# Basic Usage
+- 无侵入：`DataFaker` 对`faker.js`只做增强不做修改，你仍然可以像以前那样使用 `faker.js`
+- 模板化：`DataFaker`以模板的方式来定义数据结构，就像定义数据库表结构那样
+- 面向模型：`DataFaker`将模板封装为了模型，以模型为基本单元，提供了模型复用机制，让你的数据模板可在多处复用
+- 上下文机制：`DataFaker`采用上下文机制保持数据之间的关联性
+- 多语言：`DataFaker`底层依托`faker.js`，其同样也支持 `70` 多种语言环境
+- 多数据源：`DataFaker` 借助了 `faker.js` 的底层数据库，能够生成涵盖动物、书本等 `26` 类数据
+- 可配置：`DataFaker` 支持个性化配置方式
 
-Using `DataFaker` is very simple; you just need to:
+## 基本使用
 
-1. Define a data model
-2. Generate data
+`DataFaker`使用起来十分的简单，你只需要：
 
-## Defining a Model - defineModel
+1. 定义数据模型
+2. 生成数据
 
-The `defineModel` method is used to define a data model and accepts two parameters:
+### 定义模型-defineModel
 
-- Model name
-- Data template
+`defineModel`方法用于定义数据模型，它接受两个参数：
+
+- 模型名称
+- 数据模板
 
 ```ts
-// Define the model
+// 定义模型
 const userModel = defineModel('user', {
   id: 'string.uuid',
   name: 'person.fullName',
@@ -48,17 +51,17 @@ const userModel = defineModel('user', {
 });
 ```
 
-## Generating Data - fakeData
+### 生成数据-fakeData
 
-Use the `fakeData` function and pass in the data model to generate data matching the model template object, as shown below:
+使用`fakeData`函数并传入数据模型就能生成模型模板对象的数据，如下所示：
 
 ```ts
-// Generate data
+// 生成数据
 const data = fakeData(userModel);
 console.log(data);
 ```
 
-The generated data is as follows:
+生成的数据如下：
 
 ```json
 {
@@ -68,11 +71,11 @@ The generated data is as follows:
 }
 ```
 
-# Core Concepts
+## 核心概念
 
-## Template Syntax
+### 模板语法
 
-`DataFaker` defines data structures through templates, just like defining a database table—each data structure is a `schema`.
+`DataFaker`通过模板来定义数据结构，就像定义一个数据库表那样，每一个数据结构就是一个`schema`。
 
 ```ts {15-20}
 const addressModel = defineModel('address', {
@@ -82,17 +85,17 @@ const addressModel = defineModel('address', {
 const userModel = defineModel('user', {
   id: 'number.int',
   firstName: 'person.firstName',
-  secondName: 'person.lastName',
+  secondeName: 'person.lastName',
   age: ['number.int', { min: 18, max: 65 }],
-  hobby: ['helpers.arrayElements', ['Basketball', 'Football', 'Table Tennis', 'Badminton']],
+  hobby: ['helpers.arrayElements', ['篮球', '足球', '乒乓球', '羽毛球']],
   email: ctx => {
-    return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondName });
+    return faker.internet.email({ firstName: ctx.firstName, lastName: ctx.secondeName });
   },
   address: addressModel,
   children: {
-    // Reference the model itself; in this case, you must use the model alias 'user' instead of userModel
+    // 引用自身，此时必须使用模型别名'user'而不能使用userModel
     refModel: 'user',
-    // Control the depth of self-referential recursion
+    // 控制自引用递归深度
     deep: 3,
   },
 });
@@ -100,17 +103,17 @@ const userDatas = fakeData(userModel);
 console.dir(userDatas, { depth: Infinity });
 ```
 
-## Model Reuse
+### 模型复用
 
-The `cloneModel` function allows you to clone a model, which requires two parameters:
+使用`cloneModel`函数我们能够克隆一个模型，其需要提供两个参数
 
-- Parameter [1]: The alias of the new cloned model
-- Parameter [2]: The model object to be cloned
+- 参数 【1】：克隆的新的模型别名
+- 参数 【2】：要克隆的模型对象
 
-For example, we take the `userModel` as a prototype to clone a student model and name its alias `studentModel`:
+比如我们以`userModel`模型为原型，克隆出了一个学生模型，并将其别名命名为`studentModel`
 
 ```ts {2,17-19}
-// User model
+// 用户模型
 const userModel = defineModel('user', {
   id: 'number.int',
   firstName: 'person.firstName',
@@ -121,17 +124,17 @@ const userModel = defineModel('user', {
   },
   children: {
     refModel: 'user',
-    // Control the depth of self-referential recursion
+    // 控制自引用递归深度
     deep: 1,
   },
 });
-// Clone the student model
+// 克隆学生模型
 const studentModel = cloneModel('student', userModel);
 const studentDatas = fakeData(studentModel);
 console.dir(studentDatas, { depth: Infinity });
 ```
 
-The generated data is as follows:
+生成数据如下：
 
 ```json
 {
@@ -158,16 +161,16 @@ The generated data is as follows:
 }
 ```
 
-## Hook Functions
+### 钩子函数
 
-Hook functions are functions executed before, after, or during data generation. They allow you to manipulate data items and templates before, after, or during data generation, changing the way data is generated. `DataFaker` provides four types of hook functions:
+钩子函数就是在数据生成前后或数据生成中执行的函数，它能让你在数据生成前后或数据生成中操作数据项和模板，改变数据生成方式，`DataFaker`提供了四类钩子函数：
 
-- `beforeAllCbs`: Manipulate templates before data generation
-- `afterAllCbs`: Manipulate data after data generation
-- `beforeEachCbs`: Set templates before data item generation
-- `afterEachCbs`: Manipulate data after data item generation
+- 数据生成前操作模板-`beforeAllCbs`
+- 数据生成后操作数据-`afterAllCbs`
+- 数据项生成前设置模板-`beforeEachCbs`
+- 数据项生成后操作数据-`afterEachCbs`
 
-> For example, if you want to add an `id` attribute to all referenced data:
+> 比如我希望为所有引用数据添加 id`属性
 
 ```ts
 const addressModel = defineModel('address', {
@@ -177,7 +180,7 @@ const addressModel = defineModel('address', {
     refModel: 'address',
   },
 });
-// User model
+// 用户模型
 const userModel = defineModel('user', {
   firstName: 'person.firstName',
   secondName: 'person.lastName',
@@ -188,7 +191,7 @@ const userDatas = fakeData(userModel, {
   hooks: {
     afterEachCbs: ctx => {
       if (ctx.type === 'object' && ctx.value) {
-        // Add an id to all reference types
+        // 对所有引用类型添加id
         ctx.value['id'] = faker.string.uuid();
       }
       return ctx;
@@ -198,7 +201,7 @@ const userDatas = fakeData(userModel, {
 console.dir(userDatas, { depth: Infinity });
 ```
 
-The generated data is as follows:
+生成数据如下：
 
 ```ts
 {
@@ -219,9 +222,9 @@ The generated data is as follows:
 }
 ```
 
-## Referenced Data and Self-Reference
+### 引用数据和自引用
 
-`DataFaker` supports referenced data and the generation of self-referential recursive data.
+`DataFaker`支持引用数据和生成自引用递归数据
 
 ```ts
 const addressModel = defineModel('address', {
@@ -233,7 +236,7 @@ const addressModel = defineModel('address', {
     deep: 1,
   },
 });
-// User model
+// 用户模型
 const userModel = defineModel('user', {
   firstName: 'person.firstName',
   secondName: 'person.lastName',
@@ -248,7 +251,7 @@ const userDatas = fakeData(userModel);
 console.dir(userDatas, { depth: Infinity });
 ```
 
-The generated data is as follows:
+生成数据如下：
 
 ```json
 {
@@ -256,11 +259,11 @@ The generated data is as follows:
   "secondName": "Adams",
   "age": 41,
   "address": [
-    // First address data
+    // 第一个address数据
     {
       "country": "Democratic Republic of the Congo",
       "city": "Elisefurt",
-      // 1 level of recursion
+      // 递归1层
       "children": [
         {
           "country": "Nauru",
@@ -272,7 +275,7 @@ The generated data is as follows:
         }
       ]
     },
-    // Second address data
+    // 第二个address数据
     {
       "country": "Ecuador",
       "city": "Hamillworth",
@@ -288,7 +291,7 @@ The generated data is as follows:
       ]
     }
   ],
-  // First-level children
+  // 第一层children
   "children": {
     "firstName": "Lisette",
     "secondName": "Gutmann",
@@ -323,7 +326,7 @@ The generated data is as follows:
         ]
       }
     ],
-    // Second-level children
+    // 第二层children
     "children": {
       "firstName": "Rex",
       "secondName": "Farrell",
@@ -363,20 +366,19 @@ The generated data is as follows:
 }
 ```
 
-# Decorator Syntax
+## 装饰器语法
 
-## Basic Usage
+### 基本使用
 
-To better support TypeScript, `DataFaker` introduces decorator syntax. Essentially, decorator syntax is syntactic sugar for `defineModel`, designed to maintain compatibility between existing classes and models.
-
-For example, if your project already has two classes (`User` and `Address`) used as TypeScript types:
+`DataFaker`为了更好的支持`ts`,引入了装饰器语法，装饰器语法本质上就是`defineModel`的语法糖，它设计的初衷就是为了保持现有类和模型的共通性。
+比如现在项目中本来就有`User`和`Address`两个类作为 ts 类型
 
 ```ts
 class Address {
   declare city: string;
   declare children: Address[];
 }
-// User class
+// 用户类
 class User {
   declare id: string;
   declare firstName: string;
@@ -388,12 +390,12 @@ class User {
 }
 ```
 
-To utilize these two classes instead of redefining data models with `defineModel`, you can use decorator syntax to define the existing type classes as `User` and `Address` data models:
+为了将这两个类利用起来，而不是重新使用`defineModel`来定义数据模型，我们可以使用装饰器语法来将现有的类型类定义为`User`和`Address`数据模型。
 
-- Use the `@DataModel` decorator to define a data model, which accepts a model alias as a parameter.
-- Use the `@DataField` decorator to define fields, consistent with field definition in [Template Syntax](/Template-Syntax).
+- 使用`@DataModel`装饰器定义数据模型，它接受一个模型别名作为参数
+- 使用`@DataField`装饰器来定义字段，与[模板语法](/模板语法)中定义字段是一致的
 
-As shown below:
+如下所示：
 
 ```ts
 @DataModel('address')
@@ -426,7 +428,7 @@ const userDatas = fakeData('user', 2);
 console.dir(userDatas, { depth: Infinity });
 ```
 
-The data generation result is as follows:
+数据生成结果如下：
 
 ```ts
 [
@@ -465,9 +467,9 @@ The data generation result is as follows:
 ];
 ```
 
-## Data Model Inheritance Based on Native Classes
+### 基于原生基础的数据模型继承
 
-Decorator syntax enables easier model inheritance—simply follow the native inheritance approach without any additional modifications. As shown below, the `User` class inherits the `email` and `children` fields from the `Person` class data model:
+装饰器语法可以更加方便的实现模型继承，只需要像原生继承那样，无需做任何改动，如下所示，`User` 类从 `Person` 类的数据模型中继承了 `email` 和 `children` 字段：
 
 ```ts
 @DataModel('person')
@@ -494,7 +496,7 @@ const userDatas = fakeData('user', 2);
 console.dir(userDatas, { depth: Infinity });
 ```
 
-The generated data is as follows:
+生成数据如下：
 
 ```ts
 [
@@ -529,14 +531,14 @@ The generated data is as follows:
 ];
 ```
 
-# Multiple Configuration Methods
+## 多种配置方式
 
-## Global Configuration
+### 全局配置
 
-The following demonstrates defining data generation hook functions globally:
+下面演示全局定义数据生成钩子函数
 
 ```ts
-// Globally define the beforeAllCbs callback function
+// 全局定义beforeAllCbs回调函数
 DataFaker.setHooks({
   beforeAllCbs: schema => {
     console.log(schema);
@@ -545,9 +547,9 @@ DataFaker.setHooks({
 });
 ```
 
-## Configuration in Templates
+### 模板中配置
 
-The following demonstrates defining the number of generated reference types in a template:
+下面演示模板中定义引用类型生成数量
 
 ```ts
 const userModel = defineModel('user', {
@@ -558,21 +560,21 @@ const userModel = defineModel('user', {
 });
 ```
 
-## Runtime Configuration
+### 运行时配置
 
-The following shows configuring the generation method of referenced data at runtime:
+下面展示运行时配置引用数据生成方式
 
 ```ts
 const userDatas = fakeData(userModel, {
   refRules: {
-    // Generate 1 piece of address reference data, and then generate 1 piece of address.children self-referential data
+    // address引用数据生成一个，然后其address.childern自引用数据生成一个
     address: {
       [COUNT]: 1,
       children: {
         [COUNT]: 1,
       },
     },
-    // The self-referential recursion depth is 1, and only 1 piece of data is generated; the address reference property is the same as above
+    // 自引用递归深度为1，且只生成一个，address引用属性同上
     children: {
       [DEEP]: 1,
       [COUNT]: 1,
