@@ -1,7 +1,7 @@
 {
   "name": "data-faker-plus",
   "private": false,
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/bloom-lmh/data-faker.git"
   },
-  "homepage": "https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/",
+  "homepage": "https://df-docs-b8ktmo4q6-bloom-lmh.vercel.app/",
   "bugs": {
     "url": "https://github.com/bloom-lmh/data-faker/issues"
   },

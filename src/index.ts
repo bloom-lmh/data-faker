@@ -2,6 +2,8 @@
 export { DataModel } from './core/DataModelDecoratorFactory';
 export { DataField } from './core/DataFieldDecoratorFactory';
 
+// 迭代器工厂
+export { IteratorFactory } from './core/IteratorFactory';
 // 数据生成函数
 export { fakeData, DataFaker } from './core/DataFaker';
 

@@ -1,7 +1,7 @@
 # Getting Started
 
-[Official Website](https://df-docs-lgxj441cg-bloom-lmh.vercel.app/)
-[中文官网](https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/)
+[Official Website](https://df-docs-b8ktmo4q6-bloom-lmh.vercel.app/)
+[中文官网](https://datafaker-9j23z0sk.maozi.io/)
 
 ## Introduction
 
@@ -580,3 +580,5 @@ const userDatas = fakeData(userModel, {
   },
 });
 ```
+
+#

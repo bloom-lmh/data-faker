@@ -2,7 +2,7 @@ import { DECORATORNAME } from '../constants/DecoratorConstants';
 import { DecoratorInfo } from './DecoratorInfo';
 import { PropertyDecoratorValidator } from '../common/PropertyDecoraotrValidator';
 import 'reflect-metadata';
-import { DecoratedClassOrProto } from '../types/decorator';
+import { DecoratedClassOrProto, PropertyDecorator } from '../types/decorator';
 import { CustomGenerator, DataFieldType, FakerMethodParamsType, FakerMethodPath, RefModel } from '../types/faker';
 /**
  * 数据字段装饰器工厂
@@ -37,9 +37,9 @@ export class DataFieldDecoratorFactory {
 
   /**
    * 设置状态
-   * ..param target 被装饰的类或原型
-   * ..param propertyKey 被装饰的属性名
-   * ..param config  配置
+   * @param target 被装饰的类或原型
+   * @param propertyKey 被装饰的属性名
+   * @param config  配置
    */
   protected setupState(target: DecoratedClassOrProto, propertyKey: string | symbol, config: DataFieldType): void {
     let modelSchema =
@@ -53,7 +53,10 @@ export class DataFieldDecoratorFactory {
     }
     Reflect.defineMetadata('modelSchema', modelSchema, target);
   }
-
+  /**
+   * 创建装饰器
+   * @param config 配置
+   */
   public createDecorator(config: DataFieldType): PropertyDecorator {
     return (target: DecoratedClassOrProto, propertyKey: string | symbol) => {
       this.initDecoratorInfo();
@@ -68,6 +71,6 @@ export class DataFieldDecoratorFactory {
  */
 export function DataField<P extends FakerMethodPath>(
   options: FakerMethodPath | [P, FakerMethodParamsType<P>] | CustomGenerator | RefModel,
-) {
+): PropertyDecorator {
   return new DataFieldDecoratorFactory().createDecorator(options);
 }

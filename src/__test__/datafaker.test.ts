@@ -1,5 +1,16 @@
-import { DataFaker } from '@/core/DataFaker';
-import { faker, defineModel, fakeData, zh_CN, COUNT, DEEP, fa, DataField, DataModel, de, useModel } from '../index';
+import {
+  faker,
+  defineModel,
+  fakeData,
+  zh_CN,
+  COUNT,
+  DEEP,
+  DataModel,
+  useModel,
+  DataFaker,
+  DataField,
+  IteratorFactory,
+} from '../index';
 import { describe, test } from 'vitest';
 
 describe('1.非装饰器语法mock数据测试', () => {
@@ -327,7 +338,7 @@ describe('1.非装饰器语法mock数据测试', () => {
     const userDatas = fakeData('user', 2);
     console.dir(userDatas, { depth: Infinity });
   });
-  test.only('2.2 装饰器语法获取模型', () => {
+  test('2.2 装饰器语法获取模型', () => {
     @DataModel('person')
     class Person {
       @DataField(ctx => {
@@ -357,5 +368,20 @@ describe('1.非装饰器语法mock数据测试', () => {
     const personDatas = fakeData(personModel, 2);
     console.dir(userDatas, { depth: Infinity });
     console.dir(personDatas, { depth: Infinity });
+  });
+  test.only('2.3 迭代器', () => {
+    let hobbyMap = new Map().set('h1', '篮球').set('h2', '足球').set('h3', '乒乓球');
+    const loopReverseIterator = IteratorFactory.getLoopReverseIterator(hobbyMap, item => {
+      return item[1];
+    });
+    const userModel = defineModel('user', {
+      id: 'string.uuid',
+      reverseloopHobby: () => {
+        return loopReverseIterator.next((item, i) => {
+          return item[1] + `${i}`;
+        }).value;
+      },
+    });
+    console.log(fakeData(userModel, 6));
   });
 });

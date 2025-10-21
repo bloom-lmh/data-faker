@@ -11,3 +11,9 @@
 ### Added
 
 - Added English documentation.（添加英文说明文档）
+
+## [0.0.9] - 2025-10-21
+
+### Added
+
+- Add data iterators to help users generate data in sequence(添加数据迭代器,帮助用户按序生成数据)
