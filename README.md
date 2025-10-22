@@ -581,16 +581,16 @@ const userDatas = fakeData(userModel, {
 });
 ```
 
-# Data Iterator
+## Data Iterator
 
-数据迭代器旨在帮助你生成数据时能够按序的使用集合中的数据，简化你代码编写，比如有如下的场景:
+Data Iterators are designed to help you sequentially use data from a collection when generating data, simplifying your code writing. For example, consider the following scenario:
 
-> 需要生成 3 个用户数据，每个用户数据兴趣爱好都不同
+> Need to generate 3 user data entries, each with a different hobby.
 
-如果通过传统`faker.js`来进行书写将是这样的代码:
+If written using traditional `faker.js`, the code would look like this:
 
 ```javascript{2,6}
-let hobbyArr = ['篮球', '足球', '乒乓球'];
+let hobbyArr = ['basketball', 'soccer', 'table tennis'];
 let index = 0;
 const userModel = defineModel('user', {
   id: 'string.uuid',
@@ -601,21 +601,21 @@ const userModel = defineModel('user', {
 console.log(fakeData(userModel, 4));
 ```
 
-生成的数据如下：
+The generated data would be as follows:
 
 ```json
 [
-  { "id": "d16e7a49-5e7a-40a0-97e7-68693ffa7268", "hobby": "篮球" },
-  { "id": "268a6a63-5eee-4668-a166-d1b9f8bcf510", "hobby": "足球" },
-  { "id": "2ed907c6-0cdf-40bd-95cf-6aaf3ebe5d1c", "hobby": "乒乓球" },
+  { "id": "d16e7a49-5e7a-40a0-97e7-68693ffa7268", "hobby": "basketball" },
+  { "id": "268a6a63-5eee-4668-a166-d1b9f8bcf510", "hobby": "soccer" },
+  { "id": "2ed907c6-0cdf-40bd-95cf-6aaf3ebe5d1c", "hobby": "table tennis" },
   { "id": "7d9b0df7-7fd3-401d-a7a9-59759a0948b4", "hobby": undefined }
 ]
 ```
 
-可以看到你需要手动维护`index`变量，这并不方便而且容易与其它`index`变量进行混淆，所以`DataFaker`考虑到了这种情况，你只需要获取一个迭代器，就可以按序的使用集合中的数据。如下所示：
+As you can see, you need to manually maintain the `index` variable, which is inconvenient and prone to confusion with other `index` variables. Therefore, `DataFaker` takes this into account. You only need to obtain an iterator to sequentially use data from the collection, as shown below:
 
 ```javascript {2,6}
-let hobbyArr = ['篮球', '足球', '乒乓球'];
+let hobbyArr = ['basketball', 'soccer', 'table tennis'];
 const iterator = IteratorFactory.getIterator(hobbyArr);
 const userModel = defineModel('user', {
   id: 'string.uuid',
@@ -626,9 +626,9 @@ const userModel = defineModel('user', {
 console.log(fakeData(userModel, 4));
 ```
 
-`DataFaker`提供了四种数据迭代器，这些迭代器可以从迭代器工厂`IteratorFactory`中获取，分别是:
+`DataFaker` provides four types of data iterators, which can be obtained from the iterator factory `IteratorFactory`:
 
-- 正向迭代器 ：`IteratorFactory.getIterator()`
-- 逆向迭代器：`IteratorFactory.getReverseIterator()`
-- 循环正向迭代器：`IteratorFactory.getLoopIterator()`
-- 循环逆向迭代器：`IteratorFactory.getLoopReverseIterator()`
+- Forward Iterator: `IteratorFactory.getIterator()`
+- Reverse Iterator: `IteratorFactory.getReverseIterator()`
+- Loop Forward Iterator: `IteratorFactory.getLoopIterator()`
+- Loop Reverse Iterator: `IteratorFactory.getLoopReverseIterator()`
