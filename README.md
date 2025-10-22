@@ -1,6 +1,6 @@
 # Getting Started
 
-[Official Website](https://df-docs-b8ktmo4q6-bloom-lmh.vercel.app/)
+[Official Website](https://df-docs-seven.vercel.app/)
 [中文官网](https://datafaker-9j23z0sk.maozi.io/)
 
 ## Introduction

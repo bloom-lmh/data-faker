@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.0.8",
   "type": "module",
-  "main": "dist/index.esm.js",
+  "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/types/index.d.ts",
   "files": [
@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/bloom-lmh/data-faker.git"
   },
-  "homepage": "https://df-docs-b8ktmo4q6-bloom-lmh.vercel.app/",
+  "homepage": "https://df-docs-seven.vercel.app/",
   "bugs": {
     "url": "https://github.com/bloom-lmh/data-faker/issues"
   },

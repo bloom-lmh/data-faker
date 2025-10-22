@@ -1,8 +1,8 @@
 # Data Faker
 
 注意下面的仅仅是演示案例，具体详情请参见
-[DataFaker 国外官网](https://df-docs-lgxj441cg-bloom-lmh.vercel.app/)
-[DataFaker 国内官网](https://ootjp8xe3-datafaker-9j23z0sk.maozi.io/)
+[DataFaker 国外官网](https://df-docs-seven.vercel.app/)
+[DataFaker 国内官网](https://datafaker-9j23z0sk.maozi.io/)
 
 ## 起步
 
