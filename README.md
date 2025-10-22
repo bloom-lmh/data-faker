@@ -581,4 +581,54 @@ const userDatas = fakeData(userModel, {
 });
 ```
 
-#
+# Data Iterator
+
+数据迭代器旨在帮助你生成数据时能够按序的使用集合中的数据，简化你代码编写，比如有如下的场景:
+
+> 需要生成 3 个用户数据，每个用户数据兴趣爱好都不同
+
+如果通过传统`faker.js`来进行书写将是这样的代码:
+
+```javascript{2,6}
+let hobbyArr = ['篮球', '足球', '乒乓球'];
+let index = 0;
+const userModel = defineModel('user', {
+  id: 'string.uuid',
+  hobby: () => {
+    return hobbyArr[index++];
+  },
+});
+console.log(fakeData(userModel, 4));
+```
+
+生成的数据如下：
+
+```json
+[
+  { "id": "d16e7a49-5e7a-40a0-97e7-68693ffa7268", "hobby": "篮球" },
+  { "id": "268a6a63-5eee-4668-a166-d1b9f8bcf510", "hobby": "足球" },
+  { "id": "2ed907c6-0cdf-40bd-95cf-6aaf3ebe5d1c", "hobby": "乒乓球" },
+  { "id": "7d9b0df7-7fd3-401d-a7a9-59759a0948b4", "hobby": undefined }
+]
+```
+
+可以看到你需要手动维护`index`变量，这并不方便而且容易与其它`index`变量进行混淆，所以`DataFaker`考虑到了这种情况，你只需要获取一个迭代器，就可以按序的使用集合中的数据。如下所示：
+
+```javascript {2,6}
+let hobbyArr = ['篮球', '足球', '乒乓球'];
+const iterator = IteratorFactory.getIterator(hobbyArr);
+const userModel = defineModel('user', {
+  id: 'string.uuid',
+  hobby: () => {
+    return iterator.next().value;
+  },
+});
+console.log(fakeData(userModel, 4));
+```
+
+`DataFaker`提供了四种数据迭代器，这些迭代器可以从迭代器工厂`IteratorFactory`中获取，分别是:
+
+- 正向迭代器 ：`IteratorFactory.getIterator()`
+- 逆向迭代器：`IteratorFactory.getReverseIterator()`
+- 循环正向迭代器：`IteratorFactory.getLoopIterator()`
+- 循环逆向迭代器：`IteratorFactory.getLoopReverseIterator()`
