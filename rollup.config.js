@@ -1,4 +1,3 @@
-import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
@@ -21,9 +20,8 @@ const baseConfig = {
       entries: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
     }),
     resolve(), // 解析 node_modules 中的模块
-    commonjs(), // 转换 CommonJS 模块为 ES 模块
     typescript({ tsconfig: './tsconfig.json' }), // TypeScript 编译
-    babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }), // Babel 转译
+    babel({ babelHelpers: 'bundled', exclude: 'node_modules/**', sourceType: 'unambiguous' }), // Babel 转译
     copy({
       targets: [
         {
@@ -54,8 +52,8 @@ const prodConfig = {
   ...baseConfig,
   output: [
     { file: 'dist/index.esm.js', format: 'esm', sourcemap: false, exports: 'named' },
-    { file: 'dist/index.cjs.js', format: 'cjs', sourcemap: false, exports: 'named' },
-    { file: 'dist/index.umd.js', format: 'umd', name: 'DataFaker', sourcemap: false },
+    { file: 'dist/index.cjs', format: 'cjs', sourcemap: false, exports: 'named' },
+    { file: 'dist/index.iife.js', format: 'iife', name: 'DataFakerPlus', sourcemap: false },
   ],
   plugins: [
     ...baseConfig.plugins,

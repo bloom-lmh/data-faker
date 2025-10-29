@@ -17,3 +17,9 @@
 ### Added
 
 - Add data iterators to help users generate data in sequence(添加数据迭代器,帮助用户按序生成数据)
+
+## [0.1.0] - 2025-10-29
+
+### Fixed
+
+- Fix the export issue of the 'cjs' module.（修复`cjs`模块导出问题）
