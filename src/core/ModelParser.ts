@@ -77,7 +77,7 @@ export class ModelParser {
     if (count <= 0) {
       return null;
     } else if (count === 1) {
-      result = this.parseScheme(modelSchema, rules, path);
+      result = [this.parseScheme(modelSchema, rules, path)];
     } else {
       result = Array.from({ length: count }).map(() => this.parseScheme(modelSchema, rules, path));
     }
@@ -93,7 +93,7 @@ export class ModelParser {
     modelSchema: ModelSchema,
     rules: RefModelRule,
     path: Set<string | symbol> = new Set(),
-    currentDepth: number = 0,
+    currentDepth: number = 0
   ): Record<string | symbol, any> | null {
     // 没有模式返回空
     if (!modelSchema) {
@@ -168,7 +168,7 @@ export class ModelParser {
     }
     // 处理函数
     if (fnShemaList && fnShemaList.length > 0) {
-      fnShemaList.forEach(fnItem => {
+      fnShemaList.forEach((fnItem) => {
         let [key, value] = Object.entries(fnItem!)[0];
         result[key] = (value as Function)(result);
         if (afterEachCbs) {
@@ -216,7 +216,7 @@ export class ModelParser {
     rules: RefModelRule,
     key: string | symbol,
     path: Set<string | symbol>,
-    currentDepth: number = 0,
+    currentDepth: number = 0
   ) {
     let refModel;
     let rls = rules[key] === undefined || rules[key] === null ? {} : rules[key];
@@ -262,10 +262,10 @@ export class ModelParser {
         return this.parseScheme(refModel.getModelSchema(), rls, newPath, isCircular ? currentDepth + 1 : 0);
       } else {
         let res = Array.from({ length: rls[COUNT] as number }, () =>
-          this.parseScheme(refModel.getModelSchema(), rls as RefModelRule, newPath, isCircular ? currentDepth + 1 : 0),
+          this.parseScheme(refModel.getModelSchema(), rls as RefModelRule, newPath, isCircular ? currentDepth + 1 : 0)
         );
         // 删除最后一层递归为null的数据
-        if (!res || res.length === 0 || res.every(item => item === null)) return null;
+        if (!res || res.length === 0 || res.every((item) => item === null)) return null;
         return res;
       }
     }

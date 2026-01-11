@@ -23,3 +23,9 @@
 ### Fixed
 
 - Fix the export issue of the 'cjs' module.（修复`cjs`模块导出问题）
+
+## [0.1.1] - 2026-01-11
+
+### Fixed
+
+- When generating a single piece of data, return the data in the form of an array instead of a single object.（生产单条数据时，以数组形式返回数据，而不再以单个对象形式返回。）
